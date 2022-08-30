@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "account")
+@Table
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String password;
     private Timestamp last_login;
     private boolean enabled;

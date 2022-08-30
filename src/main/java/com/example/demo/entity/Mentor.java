@@ -14,7 +14,16 @@ public class Mentor {
     private String title;
     private String gender;
     private String race;
+    @Column(nullable = false)
     private long account_id;
+
+    public long getAccount_id() {
+        return account_id;
+    }
+
+    public void setAccount_id(long account_id) {
+        this.account_id = account_id;
+    }
 
     public void setGender(String gender) {
         this.gender = gender;

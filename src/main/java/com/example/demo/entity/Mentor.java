@@ -14,6 +14,7 @@ public class Mentor {
     private String title;
     private String gender;
     private String race;
+    private long account_id;
 
     public void setGender(String gender) {
         this.gender = gender;

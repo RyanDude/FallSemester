@@ -15,16 +15,16 @@ import java.util.Collection;
 @Component
 public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     SimpleUrlAuthenticationSuccessHandler StudentSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("/hi");
+            new SimpleUrlAuthenticationSuccessHandler("/student/hi");
     SimpleUrlAuthenticationSuccessHandler adminSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("/admin-page");
+            new SimpleUrlAuthenticationSuccessHandler("/mentor/hi");
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
             String authorityName = grantedAuthority.getAuthority();
-            if (authorityName.equals("ROLE_ADMIN")) {
+            if (authorityName.equals("ROLE_MENTOR")) {
                 // if the user is an ADMIN delegate to the adminSuccessHandler
                 this.adminSuccessHandler.onAuthenticationSuccess(request, response, authentication);
                 return;

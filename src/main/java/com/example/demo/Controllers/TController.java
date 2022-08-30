@@ -2,8 +2,10 @@ package com.example.demo.Controllers;
 
 import com.example.demo.Repository.AccountRepository;
 import com.example.demo.Repository.RoleRepository;
+import com.example.demo.Repository.StudentRepository;
 import com.example.demo.entity.Account;
 import com.example.demo.entity.Role;
+import com.example.demo.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,8 @@ public class TController {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @RequestMapping("/hi")
     public String test(){return "hello, student";}
@@ -28,9 +32,9 @@ public class TController {
     public String t(){
         return "test";
     }
-    @RequestMapping("/reg")
+    @RequestMapping("/student/reg")
     @ResponseBody
-    public String reg(@RequestBody Account account){
+    public String StudentReg(@RequestBody Account account){
         if(accountRepository.findByName(account.getName()) != null){return "Username already exist";}
         Account user = new Account();
         user.setName(account.getName());
@@ -45,6 +49,11 @@ public class TController {
         accountRepository.flush();
         role.setAccount(accountRepository.findByName(account.getName()));
         roleRepository.save(role);
+        roleRepository.flush();
+
+        Student student = new Student();
+        student.setAccount_id(accountRepository.findIdByName(account.getName()).get(0));
+        studentRepository.save(student);
         return "register successfully";
     }
 }

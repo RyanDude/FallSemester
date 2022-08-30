@@ -36,8 +36,8 @@ public class config{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         /* http. */
-        http.authorizeRequests().antMatchers("/login", "/reg", "/auth").permitAll()
-                .antMatchers("/hi","/test").hasAnyRole("STUDENT")
+        http.authorizeRequests().antMatchers("/reg", "/auth").permitAll()
+                .antMatchers("/student/**").hasAnyRole("STUDENT")
                 .and().authenticationProvider(authenticationProvider())
                 .formLogin()
                 .loginPage("http://localhost:4200/login")

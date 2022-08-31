@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class StuController {
     @RequestMapping("/student/hi")
     public String hi(){return "hi, Student";}
     @RequestMapping("/student/info")
+    @ResponseBody
     public ResponseEntity<Student> info() throws Exception{
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -35,11 +37,12 @@ public class StuController {
         if(account_id == null || account_id.isEmpty()){
             throw new Exception();
         }
-        List<Student> student = studentRepository.findByAccount_id(account_id.get(0));
+        List<Student> student = studentRepository.findByAid(account_id.get(0));
         if(student == null || student.isEmpty()){ throw new Exception(); }
         return new ResponseEntity<Student>(student.get(0), HttpStatus.OK);
     }
     @RequestMapping("/student/update")
+    @ResponseBody
     public ResponseEntity<String> update(@RequestBody Student student) throws Exception{
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -47,7 +50,7 @@ public class StuController {
         if(account_id == null || account_id.isEmpty()){
             return new ResponseEntity<String>("No such Account", HttpStatus.NOT_FOUND);
         }
-        student.setAccount_id(account_id.get(0));
+        student.setAid(account_id.get(0));
         studentRepository.save(student);
         return new ResponseEntity<String>("successfully updated", HttpStatus.OK);
     }

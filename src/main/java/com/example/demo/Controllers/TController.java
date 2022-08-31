@@ -8,10 +8,7 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -32,9 +29,10 @@ public class TController {
     public String t(){
         return "test";
     }
-    @RequestMapping("/student/reg")
+    @RequestMapping("/studentreg")
     @ResponseBody
     public String StudentReg(@RequestBody Account account){
+        System.err.println("ENTERED");
         if(accountRepository.findByName(account.getName()) != null){return "Username already exist";}
         Account user = new Account();
         user.setName(account.getName());
@@ -52,8 +50,8 @@ public class TController {
         roleRepository.flush();
 
         Student student = new Student();
-        student.setAccount_id(accountRepository.findIdByName(account.getName()).get(0));
+        student.setAid(accountRepository.findIdByName(account.getName()).get(0));
         studentRepository.save(student);
-        return "register successfully";
+        return "ok";
     }
 }

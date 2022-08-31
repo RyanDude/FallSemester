@@ -15,14 +15,14 @@ public class Student {
     private String likedGender;
     private String likedPos;
     @Column(nullable = false)
-    private long account_id;
+    private long aid;
 
-    public long getAccount_id() {
-        return account_id;
+    public long getAid() {
+        return aid;
     }
 
-    public void setAccount_id(long account_id) {
-        this.account_id = account_id;
+    public void setAid(long aid) {
+        this.aid = aid;
     }
 
     public long getId() {

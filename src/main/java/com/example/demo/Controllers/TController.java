@@ -4,14 +4,20 @@ import com.example.demo.Repository.AccountRepository;
 import com.example.demo.Repository.RoleRepository;
 import com.example.demo.Repository.StudentRepository;
 import com.example.demo.entity.Account;
+import com.example.demo.entity.ResEntity;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class TController {
@@ -24,16 +30,26 @@ public class TController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @RequestMapping("/hi")
-    public String test(){return "hello, student";}
+    @ResponseBody
+    public Map<String, String> test(){
+        HashMap<String, String> map = new HashMap<>();
+        map.put("key", "value");
+        map.put("foo", "bar");
+        map.put("aa", "bb");
+        return map;
+    }
     @RequestMapping("/test")
     public String t(){
         return "test";
     }
     @RequestMapping("/studentreg")
     @ResponseBody
-    public String StudentReg(@RequestBody Account account){
+    public ResEntity<Student> StudentReg(@RequestBody Account account){
         System.err.println("ENTERED");
-        if(accountRepository.findByName(account.getName()) != null){return "Username already exist";}
+        if(accountRepository.findByName(account.getName()) != null){
+            // return new ResEntity<Student>(404, "username has been registered");
+            return new ResEntity<Student>(new Student(),"username has been registered", 404);
+        }
         Account user = new Account();
         user.setName(account.getName());
         user.setPassword(bCryptPasswordEncoder.encode(account.getPassword()));
@@ -52,6 +68,7 @@ public class TController {
         Student student = new Student();
         student.setAid(accountRepository.findIdByName(account.getName()).get(0));
         studentRepository.save(student);
-        return "ok";
+
+        return new ResEntity<Student>(new Student(),"register successfully", 200);
     }
 }

@@ -15,7 +15,7 @@ import java.util.Collection;
 @Component
 public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     SimpleUrlAuthenticationSuccessHandler StudentSuccessHandler =
-            new SimpleUrlAuthenticationSuccessHandler("http://localhost:4200/register");
+            new SimpleUrlAuthenticationSuccessHandler("http://localhost:4200/");
     SimpleUrlAuthenticationSuccessHandler adminSuccessHandler =
             new SimpleUrlAuthenticationSuccessHandler("/mentor/hi");
     @Override

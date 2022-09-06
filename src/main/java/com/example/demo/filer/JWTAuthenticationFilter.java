@@ -2,24 +2,26 @@ package com.example.demo.filer;
 
 import com.example.demo.entity.JwtUser;
 import com.example.demo.entity.LoginUser;
-import com.example.demo.jwtUtil.SeucrityVars;
 import com.example.demo.jwtUtil.TokenUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpCookie;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
+/***
+ * @Author: Jianjun Guo
+ * @Date: Sep 1st 2022
+ * Filter for login with name & pass, after login, it will generate token for the request
+ * **/
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager){
@@ -34,7 +36,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try{
             LoginUser loginUser=objectMapper.readValue(request.getInputStream(), LoginUser.class);
-            System.err.println(loginUser.getUsername()+" "+loginUser.getPassword());
+            // System.err.println(loginUser.getUsername()+" "+loginUser.getPassword());
             UsernamePasswordAuthenticationToken token=new UsernamePasswordAuthenticationToken(loginUser.getUsername(),loginUser.getPassword());
             return authenticationManager.authenticate(token);
         }catch (IOException e){
@@ -50,13 +52,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authentication)
     {
         JwtUser user=(JwtUser)authentication.getPrincipal();
-        List<String> roles=user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         TokenUtil tokenUtil = new TokenUtil();
         String token = tokenUtil.generateAccessToken(user);
-        // token - username
-        //stringRedisTemplate.opsForValue().set(token, user.getUsername());
-        System.err.println("SUUUCCC");
-        //redisTemplate.opsForValue().set(user.getUsername(), token);
-        response.setHeader(SeucrityVars.TOKEN_HEADER, token);
+        HttpCookie cookie = ResponseCookie.from("token", token)
+                .maxAge(3600)
+                .httpOnly(true)
+                .path("/")
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 }

@@ -14,6 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * @Author: Jianjun Guo
+ * @Date: Sep 1st
+ * */
+
 @Service
 @Transactional
 public class UserService implements UserDetailsService {

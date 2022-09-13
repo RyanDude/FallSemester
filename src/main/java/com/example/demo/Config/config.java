@@ -1,9 +1,11 @@
 package com.example.demo.Config;
 
-import com.example.demo.Service.UserService;
+import com.example.demo.Service.impl.UserService;
 import com.example.demo.filer.JWTAuthenticationFilter;
 import com.example.demo.filer.TokenAuthFilter;
+import com.example.demo.filer.TokenBasic;
 import com.example.demo.handlers.MySimpleUrlAuthenticationSuccessHandler;
+import com.example.demo.jwtUtil.TokenUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +23,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
 
 /**
  *
@@ -44,6 +48,7 @@ public class config{
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         /* http. */
@@ -51,11 +56,13 @@ public class config{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.cors();
         http
+
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))))
                 .addFilter(new TokenAuthFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))));
 
         /*
-        http.authorizeRequests()
+        // if you are using thymeleaf
+        http.authorizeRequest()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/studentreg", "/login", "/hi").permitAll()
                 .antMatchers("/student/**").hasAnyRole("STUDENT")
@@ -71,8 +78,6 @@ public class config{
                 .authorizeRequests()
                 .antMatchers("/studentreg","/auth/login").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                //.antMatchers("/student/**").authenticated();
-                // .httpBasic()
         return http.build();
 
     }
@@ -89,6 +94,9 @@ public class config{
         corsConfiguration.addAllowedOriginPattern("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
+
+        corsConfiguration.setExposedHeaders(Arrays.asList("Authorization"));
+
         corsConfiguration.setAllowCredentials(true);
 
         source.registerCorsConfiguration("/**", corsConfiguration);

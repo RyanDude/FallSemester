@@ -14,9 +14,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
+
 /***
  * @Author: Jianjun Guo
  * @Date: Sep 1st 2022
@@ -52,13 +55,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication authentication)
     {
         JwtUser user=(JwtUser)authentication.getPrincipal();
-        TokenUtil tokenUtil = new TokenUtil();
-        String token = tokenUtil.generateAccessToken(user);
+        // TokenUtil tokenUtil = new TokenUtil();
+        String token = TokenUtil.generateAccessToken(user);
         HttpCookie cookie = ResponseCookie.from("token", token)
                 .maxAge(3600)
                 .httpOnly(true)
                 .path("/")
                 .build();
+
         response.addHeader("Set-Cookie", cookie.toString());
+        response.setHeader("Authorization", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()).get(0));
     }
 }

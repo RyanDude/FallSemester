@@ -6,12 +6,14 @@ import com.example.demo.Repository.RoleRepository;
 import com.example.demo.Repository.StudentRepository;
 import com.example.demo.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class TController {
@@ -113,5 +115,12 @@ public class TController {
         mentor.setAid(accountRepository.findIdByName(user.getName()).get(0));
         mentorRepository.save(mentor);
         return new ResEntity<>(200, "register successfully");
+    }
+    @RequestMapping("/get_role")
+    @ResponseBody
+    public ResEntity<String> getRole(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<String> roles = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        return new ResEntity<String>(roles.get(0), "");
     }
 }

@@ -1,11 +1,17 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.Repository.AccountRepository;
+import com.example.demo.Repository.MentorRepository;
 import com.example.demo.Repository.RoleRepository;
 import com.example.demo.Repository.StudentRepository;
+import com.example.demo.entity.Account;
+import com.example.demo.entity.Mentor;
 import com.example.demo.entity.ResEntity;
 import com.example.demo.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +35,8 @@ public class StuController {
     private RoleRepository roleRepository;
     @Autowired
     private StudentRepository studentRepository;
-
+    @Autowired
+    private MentorRepository mentorRepository;
 
     @RequestMapping("/student/hi")
     public String hi(){return "hi, Student";}
@@ -77,6 +84,37 @@ public class StuController {
         studentRepository.save(stu.get(0));
         studentRepository.flush();
         return new ResEntity<>(200, "update successfully!");
+    }
+    @RequestMapping("/student/search")
+    @ResponseBody
+    public ResEntity<Page<Mentor>> search(
+            @RequestParam(name = "name") String name, @RequestParam(name = "pageNumber") int pageNumber,
+            @RequestParam("size") int pageSize){
+        Page<Mentor> query = mentorRepository.getAll(PageRequest.of(pageNumber, pageSize), name);
+        // System.out.println("total pages" + query.getTotalElements());
+        return new ResEntity<Page<Mentor>>(query, 200);
+    }
+    @RequestMapping("/student/recommend")
+    @ResponseBody
+    public ResEntity<Slice<Mentor>> recommend(@RequestParam(name = "pageNumber") int pageNumber,
+                                              @RequestParam("size") int pageSize){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        List<Long> ids = accountRepository.findIdByName(username);
+        if(ids == null || ids.isEmpty()){
+            return new ResEntity<>(404,"User not found");
+        }
+        List<Student> stu = studentRepository.findByAid(ids.get(0));
+        if(stu == null || stu.isEmpty()){
+            return new ResEntity<>(404,"User not found");
+        }
+        Page<Mentor> mentors = null;
+        if(stu.get(0).getLikedGender().equals("Both")){
+            mentors = mentorRepository.recommendBy(PageRequest.of(pageNumber, pageSize), stu.get(0).getLikedPos());
+        }else{
+            mentors = mentorRepository.recommend(PageRequest.of(pageNumber, pageSize), stu.get(0).getLikedGender(), stu.get(0).getLikedPos());
+        }
+        return new ResEntity<>(mentors, "success", 200);
     }
 
 }

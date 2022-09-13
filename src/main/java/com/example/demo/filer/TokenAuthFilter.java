@@ -55,23 +55,23 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
                 token = c.getValue();
             }
         }
-        System.out.println("toke == "+token);
+        // System.out.println("toke == "+token);
         if (token != null && !"".equals(token.trim())) {
             // System.err.println("ENTER");
             // 从Token中解密获取用户名
-            TokenUtil tokenUtil = new TokenUtil();
-            String userName = tokenUtil.getUsername(token);
+            // TokenUtil tokenUtil = new TokenUtil();
+            String userName = TokenUtil.getUsername(token);
             // System.out.println("username: "+userName);
             if (userName != null) {
                 // 从Token中解密获取用户角色
-                String role = tokenUtil.getRole(token);
+                String role = TokenUtil.getRole(token);
 
                 // 将ROLE_XXX,ROLE_YYY格式的角色字符串转换为数组
                 String[] roles = role.split(",");
                 Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                 for (String s : roles) {
                     authorities.add(new SimpleGrantedAuthority(s));
-                    System.out.println("role: "+s);
+                    // System.out.println("role: "+s);
                 }
                 return new UsernamePasswordAuthenticationToken(userName, token, authorities);
             }

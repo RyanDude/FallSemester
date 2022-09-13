@@ -1,3 +1,9 @@
+## Deployment
+when deploy the project(docker or whatever), pls configure the JVM setting, 
+the default setting for heap is 512MB, you can change the size. 
+## IDEA change memory to prevent something terrible
+search 'memory', then click change memory setting, For arch 4096MB is 
+enough(maybe)
 ## Postgresql configuration:
 enter postgresql: <br/>&nbsp;&nbsp;&nbsp;&nbsp;
 sudo su - postgres <br/>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -14,7 +20,7 @@ Next we have to enable it.
 
 sudo systemctl enable redis.service
 
-Lets start the redis server.
+Let's start the redis server.
 
 redis-server
 

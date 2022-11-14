@@ -4,7 +4,6 @@ import com.example.demo.Repository.AccountRepository;
 import com.example.demo.Repository.MentorRepository;
 import com.example.demo.Repository.RoleRepository;
 import com.example.demo.Repository.StudentRepository;
-import com.example.demo.entity.Account;
 import com.example.demo.entity.Mentor;
 import com.example.demo.entity.ResEntity;
 import com.example.demo.entity.Student;

@@ -1,16 +1,17 @@
 package com.example.demo.filer;
 
 import com.example.demo.jwtUtil.TokenUtil;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,7 +52,7 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         String token = "";
         for (Cookie c : request.getCookies()) {
             if (c.getName().equals("token")){
-                // System.out.println(c.getName());
+                System.out.println(c.getName());
                 token = c.getValue();
             }
         }

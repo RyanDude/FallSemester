@@ -74,10 +74,10 @@ public class config{
                 .failureUrl("http://localhost:4200/error");
         * */
 
-        http
-                .authorizeRequests()
-                .antMatchers("/studentreg","/auth/login").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+        //http
+                //.authorizeRequests()
+                //.antMatchers("/studentreg","/auth/login").permitAll()
+                //.antMatchers(HttpMethod.OPTIONS, "/**").permitAll();
         return http.build();
 
     }

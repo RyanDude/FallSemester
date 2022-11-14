@@ -5,9 +5,6 @@ import com.example.demo.entity.LoginUser;
 import com.example.demo.jwtUtil.TokenUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +14,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.FilterChain;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
@@ -39,7 +39,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try{
             LoginUser loginUser=objectMapper.readValue(request.getInputStream(), LoginUser.class);
-            // System.err.println(loginUser.getUsername()+" "+loginUser.getPassword());
+            System.err.println(loginUser.getUsername()+" "+loginUser.getPassword());
             UsernamePasswordAuthenticationToken token=new UsernamePasswordAuthenticationToken(loginUser.getUsername(),loginUser.getPassword());
             return authenticationManager.authenticate(token);
         }catch (IOException e){

@@ -66,7 +66,7 @@ public class StuController {
     public ResEntity<String> update(@RequestBody Student student) throws Exception{
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        // System.out.println("username " + username);
+        System.out.println("username " + username);
         List<Long> account_id = accountRepository.findIdByName(username);
         if(account_id == null || account_id.isEmpty()){
             // "No such Account"

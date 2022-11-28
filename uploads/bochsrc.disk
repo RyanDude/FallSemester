@@ -1,0 +1,7 @@
+megs 32
+boot: disk
+log: bochs.out
+mouse: enable=0
+keyboard: keymap=/home/guotajun/share/bochs/keymaps/x11-pc-us.map
+ata0: enable=1,ioaddr1=0x1f0,ioaddr2=0x3f0,irq=14
+

@@ -1,7 +1,11 @@
 package com.example.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.w3c.dom.stylesheets.LinkStyle;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table
@@ -15,8 +19,29 @@ public class Mentor {
     private String title;
     private String gender;
     private String race;
+    private String field;
     @Column(nullable = false)
     private long aid;
+
+    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Student> students;
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
 
     public void setAid(long aid) {
         this.aid = aid;

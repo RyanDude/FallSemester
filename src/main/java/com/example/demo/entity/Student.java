@@ -14,8 +14,28 @@ public class Student {
     private String gender;
     private String likedGender;
     private String likedPos;
+    private String field;
     @Column(nullable = false)
     private long aid;
+    @ManyToOne
+    @JoinColumn
+    private Mentor mentor;
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public Mentor getMentor() {
+        return mentor;
+    }
+
+    public void setMentor(Mentor mentor) {
+        this.mentor = mentor;
+    }
 
     public long getAid() {
         return aid;
